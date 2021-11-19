@@ -16,10 +16,14 @@ header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 
 switch (METHOD) {
   case 'POST':
-    // no files provided
-    if (empty($_POST['bucket']) or empty($_FILES['files'])) {
+    // check for errors
+    if (empty($_POST['bucket'])) {
       http_response_code(400);
-      exit;
+      json([ 'error' => 'No bucket name provided.' ]);
+    }
+    if (empty($_FILES['files'])) {
+      http_response_code(400);
+      json([ 'error' => 'No files provieded.' ]);
     }
     // prepare files
     $files = prepare_files($_POST['bucket'], $_FILES['files']);
