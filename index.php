@@ -1,12 +1,20 @@
 <?php
 
+define('METHOD', $_SERVER['REQUEST_METHOD']);
+define('ORIGIN', $_SERVER['HTTP_ORIGIN'] ?? '*');
 define('BASE_URL', sprintf(
   '%s://%s/',
   $_SERVER['REQUEST_SCHEME'],
   rtrim($_SERVER['SERVER_NAME'] . dirname($_SERVER['SCRIPT_NAME']), '/'),
 ));
 
-switch ($_SERVER['REQUEST_METHOD']) {
+header('Access-Control-Allow-Origin: ' . ORIGIN);
+header('Access-Control-Allow-Methods: OPTIONS, POST');
+header('Access-Control-Allow-Headers: content-type');
+header('Access-Control-Allow-Credentials: true');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+
+switch (METHOD) {
   case 'POST':
     // no files provided
     if (empty($_POST['bucket']) or empty($_FILES['files'])) {
