@@ -1,0 +1,19 @@
+#!/bin/sh
+cd "$(dirname $0)/.."
+
+HOST=4am.sk
+USER=4am.sk
+PASS=$(security find-internet-password -s $HOST -a $USER -r ftps -w)
+DIST=.
+DEST=sub/cloud
+
+ftpup \
+  --exclude '.bin/**' \
+  --exclude '.git/**' \
+  --exclude '**/.DS_Store' \
+  --exclude '**/.gitignore' \
+  --exclude 'data/**' \
+  --username ${USER} \
+  --password ${PASS} \
+  ${DIST} \
+  ${HOST}/${DEST}
