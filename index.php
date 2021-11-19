@@ -8,10 +8,9 @@ define('BASE_URL', sprintf(
   rtrim($_SERVER['SERVER_NAME'] . dirname($_SERVER['SCRIPT_NAME']), '/'),
 ));
 
-header('Access-Control-Allow-Origin: ' . ORIGIN);
-header('Access-Control-Allow-Methods: OPTIONS, POST');
-header('Access-Control-Allow-Headers: content-type');
-header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: *');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 
 switch (METHOD) {
