@@ -36,14 +36,15 @@ switch (METHOD) {
         }
         if (!move_uploaded_file($file['tmp_name'], $dest)) return null;
         $img_imfo = getimagesize($dest);
+        $file_mime = image_type_to_mime_type($img_imfo[2]);
         return [
           'url'    => BASE_URL . $file['new_name'],
-          'name'   => $file['name'],
           // 'path'   => $file['new_name'],
+          'name'   => $file['name'],
+          'mime'   => $file_mime,
           'size'   => $file['size'],
           'width'  => $img_imfo[0],
           'height' => $img_imfo[1],
-          'mime'   => image_type_to_mime_type($img_imfo[2]),
         ];
       } catch (Exception $e) {
         return false;
