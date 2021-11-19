@@ -34,12 +34,17 @@ switch (METHOD) {
         if ($dir = dirname($dest) and !is_dir($dir) and !mkdir($dir, 0777, true)) {
           throw new Exception('destination directory does not exists or is not writeable');
         }
-        return move_uploaded_file($file['tmp_name'], $dest) ? [
-          'name' => $file['name'],
-          'path' => $file['new_name'],
-          'link' => BASE_URL . $file['new_name'],
-          'size' => $file['size'],
-        ] : null;
+        if (!move_uploaded_file($file['tmp_name'], $dest)) return null;
+        $img_imfo = getimagesize($dest);
+        return [
+          'url'    => BASE_URL . $file['new_name'],
+          'name'   => $file['name'],
+          // 'path'   => $file['new_name'],
+          'size'   => $file['size'],
+          'width'  => $img_imfo[0],
+          'height' => $img_imfo[1],
+          'mime'   => image_type_to_mime_type($img_imfo[2]),
+        ];
       } catch (Exception $e) {
         return false;
       }
