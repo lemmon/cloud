@@ -8,9 +8,6 @@ define('BASE_URL', sprintf(
   rtrim($_SERVER['SERVER_NAME'] . dirname($_SERVER['SCRIPT_NAME']), '/'),
 ));
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 
 switch (METHOD) {
@@ -75,12 +72,19 @@ function prepare_files(string $bucket, array $input)
         'data/%s/%s/%s',
         $bucket,
         date('Ym'),
-        rtrim(uuid() . '.' . strtolower(pathinfo($input['name'][$i], PATHINFO_EXTENSION)), '.'),
+        rtrim(uuid() . '.' . get_extension($input['name'][$i]), '.'),
       ),
       'size' => $input['size'][$i],
     ];
   }
   return $data;
+}
+
+function get_extension($file)
+{
+  $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+  $ext = str_replace(['jpeg'], ['jpg'], $ext);
+  return $ext;
 }
 
 function uuid()
