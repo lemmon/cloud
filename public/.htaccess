@@ -1,0 +1,8 @@
+RewriteEngine on
+<Limit GET>
+  # Header unset ETag
+  # Header set Cache-Control "public, max-age=31536000, immutable"
+</Limit>
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ resize.php [L]

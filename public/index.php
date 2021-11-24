@@ -8,6 +8,9 @@ define('BASE_URL', sprintf(
   rtrim($_SERVER['SERVER_NAME'] . dirname($_SERVER['SCRIPT_NAME']), '/'),
 ));
 
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: *');
+header('Access-Control-Allow-Methods: GET,POST,DELETE,OPTIONS');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 
 switch (METHOD) {

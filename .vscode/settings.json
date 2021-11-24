@@ -1,6 +1,6 @@
 {
   "files.exclude": {
-    "data": true
+    "public/data": true
   },
   "files.trimFinalNewlines": true
 }
