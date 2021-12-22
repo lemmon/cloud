@@ -24,8 +24,12 @@ switch (METHOD) {
       http_response_code(400);
       json([ 'error' => 'No files provieded.' ]);
     }
+    // props
+    $bucket = $_POST['bucket'];
+    $folder = $_POST['folder'] ?? '';
+    $files = $_FILES['files'];
     // prepare files
-    $files = prepare_files($_POST['bucket'], $_FILES['files']);
+    $files = prepare_files($bucket, $folder, $files);
     // upload files
     $files = array_filter(array_map(function ($file) {
       try {
@@ -62,22 +66,22 @@ switch (METHOD) {
     exit;
 }
 
-function prepare_files(string $bucket, array $input)
+function prepare_files(string $bucket, string $folder, array $files)
 {
   $data = [];
-  foreach ($input['name'] as $i => $file) {
-    if ($input['error'][$i]) continue;
+  foreach (array_keys($files['name']) as $i) {
+    if ($files['error'][$i]) continue;
     $data[] = [
-      'name' => $input['name'][$i],
-      'type' => $input['type'][$i],
-      'tmp_name' => $input['tmp_name'][$i],
-      'new_name' => sprintf(
+      'name' => $files['name'][$i],
+      'type' => $files['type'][$i],
+      'tmp_name' => $files['tmp_name'][$i],
+      'new_name' => preg_replace('#/{2,}#', '/', sprintf(
         'data/%s/%s/%s',
         $bucket,
-        date('Ym'),
-        rtrim(uuid() . '.' . get_extension($input['name'][$i]), '.'),
-      ),
-      'size' => $input['size'][$i],
+        trim($folder, '/'),
+        rtrim(uuid() . '.' . get_extension($files['name'][$i]), '.'),
+      )),
+      'size' => $files['size'][$i],
     ];
   }
   return $data;
@@ -86,7 +90,9 @@ function prepare_files(string $bucket, array $input)
 function get_extension($file)
 {
   $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-  $ext = str_replace(['jpeg'], ['jpg'], $ext);
+  $ext = strtr($ext, [
+    'jpeg' => 'jpg',
+  ]);
   return $ext;
 }
 
