@@ -26,8 +26,8 @@ switch ($info['mime']) {
   default: throw new \Exception('unsupported image format');
 }
 
-$width = $m[3] ? intval($m[3]) : FALSE;
-$height = $m[4] ? intval($m[4]) : FALSE;
+$width = $m[3] ? intval($m[3]) : (($m[6] === 'w' and !empty($m[5])) ? intval($m[5]) : FALSE);
+$height = $m[4] ? intval($m[4]) : (($m[6] === 'h' and !empty($m[5])) ? intval($m[5]) : FALSE);
 
 if ($width and $height) {
   // ratio
@@ -38,24 +38,39 @@ if ($width and $height) {
     $width_ratio = round($info[0] / $info[1] * $height);
     $height_ratio = $height;
   }
-  // crop image
-  $output_image = imagecreatetruecolor($width, $height);
-  imagealphablending($output_image, TRUE);
-  imagecopyresampled(
-    $output_image,
-    $input_image,
-    0 - floor(($width_ratio - $width) / 2),
-    0 - floor(($height_ratio - $height) / 2),
-    0,
-    0,
-    $width_ratio,
-    $height_ratio,
-    $info[0],
-    $info[1],
-  );
+  // offset
+  $offset_x = floor(($width_ratio - $width) / 2);
+  $offset_y = floor(($height_ratio - $height) / 2);
+} elseif ($width) {
+  $height = round($info[1] / $info[0] * $width);
+  $width_ratio = $width;
+  $height_ratio = $height;
+  $offset_x = 0;
+  $offset_y = 0;
+} elseif ($height) {
+  $width = round($info[0] / $info[1] * $height);
+  $width_ratio = $width;
+  $height_ratio = $height;
+  $offset_x = 0;
+  $offset_y = 0;
 } else {
   throw new \Exception('operation not supported');
 }
+
+$output_image = imagecreatetruecolor($width, $height);
+imagealphablending($output_image, TRUE);
+imagecopyresampled(
+  $output_image,
+  $input_image,
+  0 - $offset_x,
+  0 - $offset_y,
+  0,
+  0,
+  $width_ratio,
+  $height_ratio,
+  $info[0],
+  $info[1],
+);
 
 switch ($info['mime']) {
   case 'image/jpeg': imagejpeg($output_image, $output_file); break;
