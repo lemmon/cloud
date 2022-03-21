@@ -20,6 +20,7 @@ if (!$info) {
 }
 
 switch ($info['mime']) {
+  case 'image/webp': $input_image = imagecreatefromwebp($input_file); break;
   case 'image/jpeg': $input_image = imagecreatefromjpeg($input_file); break;
   case 'image/gif': $input_image = imagecreatefromgif($input_file); break;
   case 'image/png': $input_image = imagecreatefrompng($input_file); break;
@@ -73,6 +74,7 @@ imagecopyresampled(
 );
 
 switch ($info['mime']) {
+  case 'image/webp': imagewebp($output_image, $output_file); break;
   case 'image/jpeg': imagejpeg($output_image, $output_file); break;
   case 'image/gif': imagegif($output_image, $output_file); break;
   case 'image/png': imagepng($output_image, $output_file); break;
