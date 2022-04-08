@@ -59,7 +59,7 @@ if ($width and $height) {
 }
 
 $output_image = imagecreatetruecolor($width, $height);
-imagealphablending($output_image, TRUE);
+imagealphablending($output_image, false);
 imagecopyresampled(
   $output_image,
   $input_image,
