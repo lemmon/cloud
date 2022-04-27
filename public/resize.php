@@ -8,6 +8,21 @@ set_exception_handler(function ($ex) {
   die;
 });
 
+function dd($x)
+{
+  header('Content-Type: text/plain; charset=utf-8');
+  print_r($x);
+  die;
+}
+
+const MIME = [
+  'webp' => 'image/webp',
+  'jpeg' => 'image/jpeg',
+  'jpg'  => 'image/jpeg',
+  'gif'  => 'image/gif',
+  'png'  => 'image/png',
+];
+
 // main
 
 $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
@@ -17,12 +32,26 @@ if (!$m) {
   throw new \Exception('invalid format');
 }
 
-$input_file = __DIR__ . $m[1] . '.' . $m[7];
-$output_file = __DIR__ . $m[1] . '.' . $m[2] . '.' . $m[7];
+if (!array_key_exists($m[7], MIME)) {
+  throw new \Exception('unsupported image format');
+}
 
-if (!file_exists($input_file)) {
+function find_file(string $base)
+{
+  foreach (array_keys(MIME) as $type) {
+    $file = __DIR__ . $base . '.' . $type;
+    if (file_exists($file)) return $file;
+  }
+}
+
+$input_file = find_file($m[1]);
+
+if (!$input_file) {
   throw new \Exception('file not found');
 }
+
+$output_file = __DIR__ . $m[1] . '.' . $m[2] . '.' . $m[7];
+$output_mime = MIME[$m[7]];
 
 $info = getimagesize($input_file);
 if (!$info) {
@@ -69,6 +98,7 @@ if ($width and $height) {
 }
 
 $output_image = imagecreatetruecolor($width, $height);
+
 imagealphablending($output_image, false);
 imagecopyresampled(
   $output_image,
@@ -83,7 +113,7 @@ imagecopyresampled(
   $info[1],
 );
 
-switch ($info['mime']) {
+switch ($output_mime) {
   case 'image/webp': imagewebp($output_image, $output_file); break;
   case 'image/jpeg': imagejpeg($output_image, $output_file); break;
   case 'image/gif': imagegif($output_image, $output_file); break;
@@ -93,6 +123,6 @@ switch ($info['mime']) {
 imagedestroy($input_image);
 imagedestroy($output_image);
 
-header('Content-Type: ' . $info['mime']);
+header('Content-Type: ' . $output_mime);
 
 readfile($output_file);
