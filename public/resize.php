@@ -1,5 +1,15 @@
 <?php
 
+// init
+
+set_exception_handler(function ($ex) {
+  header('Content-Type: text/plain; charset=utf-8');
+  echo 'error: ', $ex->getMessage();
+  die;
+});
+
+// main
+
 $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
 preg_match("#^${base}([^\.]+)\.((\d+)x(\d+)|(\d+)([wh]))\.(\w+)$#", $_SERVER['REQUEST_URI'], $m);
 
