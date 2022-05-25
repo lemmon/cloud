@@ -100,6 +100,7 @@ if ($width and $height) {
 $output_image = imagecreatetruecolor($width, $height);
 
 imagealphablending($output_image, false);
+imagesavealpha($output_image, true);
 imagecopyresampled(
   $output_image,
   $input_image,
