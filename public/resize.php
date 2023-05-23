@@ -26,7 +26,7 @@ const MIME = [
 // main
 
 $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
-preg_match("#^${base}([^\.]+)\.((\d+)x(\d+)|(\d+)([wh]))\.(\w+)$#", $_SERVER['REQUEST_URI'], $m);
+preg_match("#^{$base}([^\.]+)\.((\d+)x(\d+)|(\d+)([wh]))\.(\w+)$#", $_SERVER['REQUEST_URI'], $m);
 
 if (!$m) {
   throw new \Exception('invalid format');
