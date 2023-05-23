@@ -115,8 +115,8 @@ imagecopyresampled(
 );
 
 switch ($output_mime) {
-  case 'image/webp': imagewebp($output_image, $output_file); break;
-  case 'image/jpeg': imagejpeg($output_image, $output_file); break;
+  case 'image/webp': imagewebp($output_image, $output_file, 85); break;
+  case 'image/jpeg': imagejpeg($output_image, $output_file, 85); break;
   case 'image/gif': imagegif($output_image, $output_file); break;
   case 'image/png': imagepng($output_image, $output_file); break;
 }
