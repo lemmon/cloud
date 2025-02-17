@@ -16,17 +16,13 @@ header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 switch (METHOD) {
   case 'POST':
     // check for errors
-    if (empty($_POST['bucket'])) {
-      http_response_code(400);
-      json([ 'error' => 'No bucket name provided.' ]);
-    }
     if (empty($_FILES['files'])) {
       http_response_code(400);
-      json([ 'error' => 'No files provieded.' ]);
+      json([ 'error' => 'No Files Provided' ]);
     }
     // props
-    $bucket = $_POST['bucket'];
-    $folder = $_POST['folder'] ?? '';
+    $bucket = $_POST['bucket'] ?? null ?: 'untitled-bucket';
+    $folder = $_POST['folder'] ?? null ?: 'untitled-folder';
     $files = $_FILES['files'];
     // prepare files
     $files = prepare_files($bucket, $folder, $files);
@@ -76,7 +72,7 @@ function prepare_files(string $bucket, string $folder, array $files)
       'type' => $files['type'][$i],
       'tmp_name' => $files['tmp_name'][$i],
       'new_name' => preg_replace('#/{2,}#', '/', sprintf(
-        'data/%s/%s/%s',
+        'storage/%s/%s/%s',
         $bucket,
         trim($folder, '/'),
         rtrim(uuid() . '.' . get_extension($files['name'][$i]), '.'),
