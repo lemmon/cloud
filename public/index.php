@@ -5,7 +5,7 @@ define('ORIGIN', $_SERVER['HTTP_ORIGIN'] ?? '*');
 define('BASE_URL', sprintf(
   '%s://%s/',
   $_SERVER['REQUEST_SCHEME'],
-  rtrim($_SERVER['SERVER_NAME'] . dirname($_SERVER['SCRIPT_NAME']), '/'),
+  rtrim($_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']), '/'),
 ));
 
 header('Access-Control-Allow-Origin: *');
