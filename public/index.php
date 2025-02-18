@@ -41,6 +41,7 @@ switch (METHOD) {
           // 'path'   => $file['new_name'],
           'name'   => $file['name'],
           'mime'   => $file_mime,
+          'type'   => explode('/', $file_mime)[0],
           'size'   => $file['size'],
           'width'  => $img_imfo[0],
           'height' => $img_imfo[1],
