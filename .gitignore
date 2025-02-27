@@ -1,1 +1,6 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Cloud
 public/storage
