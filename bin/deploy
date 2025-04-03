@@ -9,7 +9,7 @@ DEST=sub/cloud
 
 ftpup \
   --exclude '**/.DS_Store' \
-  --exclude 'data/**' \
+  --exclude 'storage/**' \
   --username ${USER} \
   --password ${PASS} \
   ${DIST} \
